@@ -10,6 +10,12 @@ packages = [{include = "fullstack_gpt"}]
 [tool.poetry.dependencies]
 python = "^3.11"
 ipykernel = "^6.29.3"
+openai = "^1.13.3"
+langchain-openai = "^0.0.8"
+langchain = "^0.1.13"
+
+python-dotenv = "^1.0.1"
+tiktoken = "^0.6.0"
 
 
 [tool.poetry.group.dev.dependencies]
