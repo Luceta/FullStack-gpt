@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "fullstack-gpt"
+version = "0.1.0"
+description = "full stack gpt course with python"
+authors = ["Luceta <57941164+Luceta@users.noreply.github.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "fullstack_gpt"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
