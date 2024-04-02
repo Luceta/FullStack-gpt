@@ -17,6 +17,7 @@ python-dotenv = "^1.0.1"
 tiktoken = "^0.6.0"
 chromadb = "^0.4.24"
 faiss-cpu = "^1.8.0"
+streamlit = "^1.32.2"
 
 
 [tool.poetry.group.dev.dependencies]
