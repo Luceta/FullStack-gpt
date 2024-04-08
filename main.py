@@ -10,15 +10,6 @@ from langchain_community.retrievers import WikipediaRetriever
 from langchain.schema import BaseOutputParser
 
 
-class JsonOutputParser(BaseOutputParser):
-    def parse(self, text):
-        text = text.replace("```", "").replace("json", "")
-        return json.loads(text)
-
-
-output_parser = JsonOutputParser()
-
-
 st.set_page_config(page_title="QuizGPT-Challenge", page_icon="❓")
 
 st.title("Quiz GPT-Turbo")
@@ -116,7 +107,7 @@ with st.sidebar:
     )
     os.environ["OPENAI_API_KEY"] = openai_api_key
     st.markdown(
-        "[GitHub Repository](https://github.com/summer-2022/FULLSTACK-GPT/tree/main)"
+        "[GitHub Repository](https://github.com/Luceta/FullStack-gpt/tree/feat/quizGPT)"
     )
 
 if openai_api_key:
