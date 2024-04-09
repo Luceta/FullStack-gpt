@@ -1,4 +1,7 @@
-import streamlit as st
+from typing import List, Dict, Any
+from langchain.docstore.document import Document
+from langchain_core import retrievers
+from bs4 import BeautifulSoup
 
 from langchain.document_loaders import SitemapLoader
 from langchain.schema.runnable import RunnableLambda, RunnablePassthrough
@@ -7,7 +10,7 @@ from langchain.vectorstores.faiss import FAISS
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
-
+import streamlit as st
 
 llm = ChatOpenAI(
     temperature=0.1,
@@ -42,20 +45,62 @@ answers_prompt = ChatPromptTemplate.from_template(
 )
 
 
-def get_answers(inputs):
-    docs = inputs["docs"]
-    question = inputs["question"]
+def get_answers(inputs: Dict[str, Any]) -> Dict:
+    docs: List[Document] = inputs["docs"]
+    question: str = inputs["question"]
     answers_chain = answers_prompt | llm
-    answers = []
-    for doc in docs:
-        result = answers_chain.invoke(
-            {"question": question, "context": doc.page_content}
-        )
-        answers.append(result.content)
-    st.write(answers)
+
+    return {
+        "question": question,
+        "answers": [
+            {
+                "answer": answers_chain.invoke(
+                    {"question": question, "context": doc.page_content}
+                ).content,
+                "source": doc.metadata["source"],
+                "date": doc.metadata["lastmod"],
+            }
+            for doc in docs
+        ],
+    }
 
 
-def parse_page(soup):
+choose_prompt = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            """
+            Use ONLY the following pre-existing answers to answer the user's question.
+
+            Use the answers that have the highest score (more helpful) and favor the most recent ones.
+
+            Cite sources and return the sources of the answers as they are, do not change them.
+
+            Answers: {answers}
+            """,
+        ),
+        ("human", "{question}"),
+    ]
+)
+
+
+def choose_answer(inputs: Dict[str, Any]) -> Any:
+    answers = inputs["answers"]
+    question = inputs["question"]
+    choose_chain = choose_prompt | llm
+    condensed = "\n\n".join(
+        f"{answer['answer']}\nSource:{answer['source']}\nDate:{answer['date']}\n"
+        for answer in answers
+    )
+    return choose_chain.invoke(
+        {
+            "question": question,
+            "answers": condensed,
+        }
+    )
+
+
+def parse_page(soup: BeautifulSoup) -> str:
     header = soup.find("header")
     footer = soup.find("footer")
     if header:
@@ -70,19 +115,24 @@ def parse_page(soup):
     )
 
 
-# @st.cache_data(show_spinner="Loading website...")
-def load_website(url):
-    splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-        chunk_size=1000,
-        chunk_overlap=200,
+@st.cache_resource(show_spinner="Loading website...")
+def load_website(url: str) -> retrievers:
+    splitter: RecursiveCharacterTextSplitter = (
+        RecursiveCharacterTextSplitter.from_tiktoken_encoder(
+            chunk_size=1000,
+            chunk_overlap=200,
+        )
     )
-    loader = SitemapLoader(
+    loader: SitemapLoader = SitemapLoader(
         url,
+        filter_urls=[
+            r"^(.*\/blog\/).*",
+        ],
         parsing_function=parse_page,
     )
     loader.requests_per_second = 2
-    docs = loader.load_and_split(text_splitter=splitter)
-    vector_store = FAISS.from_documents(docs, OpenAIEmbeddings())
+    docs: List[Document] = loader.load_and_split(text_splitter=splitter)
+    vector_store: FAISS = FAISS.from_documents(docs, OpenAIEmbeddings())
     return vector_store.as_retriever()
 
 
@@ -116,12 +166,15 @@ if url:
             st.error("Please write down a Sitemap URL.")
     else:
         retriever = load_website(url)
-
-        chain = {
-            "docs": retriever,
-            "question": RunnablePassthrough(),
-        } | RunnableLambda(get_answers)
-
-        # 아래 질문이 retreiver에 ivoke값으로서 입력값으로 들어가고, retirever.invoke(" what is the pricing of GPT-4"),
-        # RunnbalePassThorught는 "What is the pricing of GPT-4 Turbo with vision. 질문의 값으로 교체 되는 것들어가는 것과 같다."
-        chain.invoke("What is the pricing of GPT-4 Turbo with vision.")
+        query = st.text_input("Ask a question to the website.")
+        if query:
+            chain = (
+                {
+                    "docs": retriever,
+                    "question": RunnablePassthrough(),
+                }
+                | RunnableLambda(get_answers)
+                | RunnableLambda(choose_answer)
+            )
+            result = chain.invoke(query)
+            st.markdown(result.content.replace("$", "\$"))
