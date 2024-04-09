@@ -13,9 +13,6 @@ from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 import streamlit as st
 
-# llm = ChatOpenAI(
-#    temperature=0.1,
-# )
 
 answers_prompt = ChatPromptTemplate.from_template(
     """
@@ -118,21 +115,17 @@ def parse_page(soup: BeautifulSoup) -> str:
 
 @st.cache_resource(show_spinner="Loading website...")
 def load_website(url: str) -> retrievers:
-    splitter: RecursiveCharacterTextSplitter = (
-        RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-            chunk_size=1000,
-            chunk_overlap=200,
-        )
+    splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
+        chunk_size=1000,
+        chunk_overlap=200,
     )
-    loader: SitemapLoader = SitemapLoader(
-        url,
-        filter_urls=[
-            r"^(.*\/blog\/).*",
-        ],
+    loader = SitemapLoader(
+        web_path=url,
         parsing_function=parse_page,
+        filter_urls=[r"^(.*\/(ai-gateway|vectorize|workers-ai)\/).*"],
     )
     loader.requests_per_second = 2
-    docs: List[Document] = loader.load_and_split(text_splitter=splitter)
+    docs = loader.load_and_split(text_splitter=splitter)
     vector_store: FAISS = FAISS.from_documents(docs, OpenAIEmbeddings())
     return vector_store.as_retriever()
 
