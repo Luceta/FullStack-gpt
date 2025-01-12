@@ -8,14 +8,21 @@ readme = "README.md"
 packages = [{include = "fullstack_gpt"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.9,<3.13"
 ipykernel = "^6.29.3"
-openai = "^1.13.3"
-langchain-openai = "^0.0.8"
-langchain = "^0.1.13"
+
 
 python-dotenv = "^1.0.1"
-tiktoken = "^0.6.0"
+tiktoken = "^0.7.0"
+langchain-unstructured = "^0.1.6"
+langchain-openai = "^0.3.0"
+unstructured-client = "^0.28.1"
+langchain-community = "^0.3.14"
+python-magic = "^0.4.27"
+unstructured = "^0.16.12"
+langchain-chroma = "^0.1.2"
+langchain-core = "^0.3.29"
+langchain = "^0.3.14"
 
 
 [tool.poetry.group.dev.dependencies]
