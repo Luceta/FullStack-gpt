@@ -85,51 +85,6 @@ class JsonOutputParser(BaseOutputParser):
 output_parser = JsonOutputParser()
 
 
-st.set_page_config(page_title="QuizGPT-Challenge", page_icon="❓")
-
-st.title("Quiz GPT-Turbo")
-
-
-# Define function schema
-function = {
-    "name": "create_quiz",
-    "description": "function that takes a list of questions and answers and returns a quiz",
-    "parameters": {
-        "type": "object",
-        "properties": {
-            "questions": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "question": {
-                            "type": "string",
-                        },
-                        "answers": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "answer": {
-                                        "type": "string",
-                                    },
-                                    "correct": {
-                                        "type": "boolean",
-                                    },
-                                },
-                                "required": ["answer", "correct"],
-                            },
-                        },
-                    },
-                    "required": ["question", "answers"],
-                },
-            }
-        },
-        "required": ["questions"],
-    },
-}
-
-
 def format_docs(docs):
     return "\n\n".join(document.page_content for document in docs)
 
