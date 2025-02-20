@@ -112,7 +112,7 @@ with st.sidebar:
         "Upload a .txt, .pdf, or .docx file", type=["pdf", "txt", "docx"]
     )
     st.sidebar.markdown(
-        "[View Code on GitHub](https://github.com/yourrepo)"
+        "[View Code on GitHub](https://github.com/Luceta/FullStack-gpt/commit/53a027b19a03ea9cf1fd9f53072a25913abc576c)"
     )  # 실제 GitHub 링크로 교체
 
 # 파일 업로드 및 처리
