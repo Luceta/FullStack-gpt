@@ -9,7 +9,7 @@ from langchain.prompts.chat import ChatPromptTemplate
 from langchain.schema.runnable import RunnablePassthrough, RunnableLambda
 import openai
 
-st.title("DocumentGPT")
+st.title("Streamlit is 🔥 challenage")
 
 # OpenAI API Key 입력
 api_key = st.sidebar.text_input("Enter OpenAI API Key", type="password")
