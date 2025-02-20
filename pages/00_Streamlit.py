@@ -25,6 +25,10 @@ if not api_key:
     st.sidebar.warning("Please enter your OpenAI API Key.")
 else:
     openai.api_key = api_key
+    llm = ChatOpenAI(
+        temperature=0.1,
+        streaming=True,
+    )
 
 
 # 파일 임베딩 함수

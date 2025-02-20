@@ -37,6 +37,7 @@ emoji==2.14.1 ; python_version >= "3.9" and python_full_version != "3.9.7" and p
 eval-type-backport==0.2.2 ; python_version >= "3.9" and python_version < "3.13" and python_full_version != "3.9.7"
 exceptiongroup==1.2.2 ; python_version >= "3.9" and python_full_version != "3.9.7" and python_version < "3.11"
 executing==2.2.0 ; python_version >= "3.9" and python_full_version != "3.9.7" and python_version < "3.13"
+faiss-cpu==1.10.0 ; python_version >= "3.9" and python_full_version != "3.9.7" and python_version < "3.13"
 fastapi==0.115.8 ; python_version >= "3.9" and python_version < "3.13" and python_full_version != "3.9.7"
 filelock==3.17.0 ; python_version >= "3.9" and python_version < "3.13" and python_full_version != "3.9.7"
 filetype==1.2.0 ; python_version >= "3.9" and python_full_version != "3.9.7" and python_version < "3.13"
