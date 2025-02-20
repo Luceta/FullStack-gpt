@@ -8,33 +8,23 @@ from langchain_openai import ChatOpenAI
 from langchain.prompts.chat import ChatPromptTemplate
 from langchain.schema.runnable import RunnablePassthrough, RunnableLambda
 import openai
+import os
+
 
 st.title("Streamlit is 🔥 challenage")
 
 # OpenAI API Key 입력
 api_key = st.sidebar.text_input("Enter OpenAI API Key", type="password")
 
+# 환경 변수에 API 키 설정
+os.environ["OPENAI_API_KEY"] = api_key
+
+
 # API 키가 없으면 경고 표시
 if not api_key:
     st.sidebar.warning("Please enter your OpenAI API Key.")
 else:
     openai.api_key = api_key
-
-    try:
-        response = openai.chat.completions.create(
-            model="gpt-3.5-turbo",  # 최신 모델을 사용합니다
-            messages=[{"role": "system", "content": "Test"}],
-        )
-
-        # API 키가 유효한 경우
-        if response:
-            st.sidebar.success("API Key is valid!")  # 유효한 API 키일 때 메시지 출력
-            llm = ChatOpenAI(temperature=0.1, streaming=True, openai_api_key=api_key)
-            # API 키 설정
-    except openai.AuthenticationError:
-        st.sidebar.error("Invalid API Key! Please check your key and try again.")
-        llm = None  # 인증 오류가 나면 llm 초기화하지 않음
-        file = None  # 파일 업로드 UI를 비활성화
 
 
 # 파일 임베딩 함수
