@@ -7,11 +7,28 @@ from langchain.vectorstores.faiss import FAISS
 from langchain_openai import ChatOpenAI
 from langchain.prompts.chat import ChatPromptTemplate
 from langchain.schema.runnable import RunnablePassthrough, RunnableLambda
+from langchain.callbacks.base import BaseCallbackHandler
+
 import openai
 import os
 
 
 st.title("Streamlit is 🔥 challenage")
+
+
+class ChatCallbackHandler(BaseCallbackHandler):
+    message = ""
+
+    def on_llm_start(self, *args, **kwargs):
+        self.message_box = st.empty()
+
+    def on_llm_end(self, *args, **kwargs):
+        save_message(self.message, "ai")
+
+    def on_llm_new_token(self, token, *args, **kwargs):
+        self.message += token
+        self.message_box.markdown(self.message)
+
 
 # OpenAI API Key 입력
 api_key = st.sidebar.text_input("Enter OpenAI API Key", type="password")
@@ -28,6 +45,7 @@ else:
     llm = ChatOpenAI(
         temperature=0.1,
         streaming=True,
+        callbacks=ChatCallbackHandler(),
     )
 
 
