@@ -164,7 +164,7 @@ with st.sidebar:
     )
     os.environ["OPENAI_API_KEY"] = openai_api_key
     st.markdown(
-        "[GitHub Repository](https://github.com/Luceta/FullStack-gpt/tree/feat/quizGPT)"
+        "[GitHub Repository](https://github.com/Luceta/FullStack-gpt/commit/bcaa7afd4007ce34817d7809b829b2ba8ccc48b7)"
     )
     url = st.text_input(
         "Write down a URL",
