@@ -1,0 +1,16 @@
+### XZ Backdoor Research Results:
+
+#### Overview:
+Details have emerged about a supply chain attack involving the XZ Utils, an open-source lossless compression utility widely used in Linux distributions. The attack targeted encrypted SSH connections and involved malicious code planted in the XZ Utils package.
+
+#### Key Points:
+- XZ is an open-source lossless compression utility preinstalled in major Linux distributions.
+- XZ provides command line tools for working with the XZ compression format.
+- The backdoor in XZ Utils compromised sshd authentication.
+- The malicious code has been circulating for more than a month.
+
+#### Actions:
+- It is important to check and update your Kali installation to avoid this security issue.
+- Stay informed about the latest developments in the XZ backdoor incident to protect your systems.
+
+For more detailed information, you can visit the source [here](https://www.bleepingcomputer.com/news/security/backdoor-found-in-widely-used-linux-utility-targets-encrypted-ssh-connections/).
