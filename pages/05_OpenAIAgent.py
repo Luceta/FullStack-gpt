@@ -304,7 +304,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown(
-        "[GitHub Repository](https://github.com/Luceta/FullStack-gpt/tree/feat/OpenAI-Assistants)"
+        "[GitHub Repository](https://github.com/Luceta/FullStack-gpt/tree/gpt-challenge)"
     )
 
 if api_key:
