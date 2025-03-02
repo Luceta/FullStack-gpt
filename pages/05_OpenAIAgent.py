@@ -10,58 +10,10 @@ from langchain.utilities.duckduckgo_search import DuckDuckGoSearchAPIWrapper
 
 
 from langchain_community.agent_toolkits import FileManagementToolkit
-from selenium import webdriver
-
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-from time import sleep
-from bs4 import BeautifulSoup
 
 
 # ============================================================
 # 커스텀 도구 정의
-
-
-def get_web_content_with_scroll(inputs):
-    url = inputs["url"]
-
-    # Selenium WebDriver 설정
-    options = webdriver.ChromeOptions()
-    options.headless = True  # 창을 표시하지 않음
-    driver = webdriver.Chrome(
-        service=Service(ChromeDriverManager().install()), options=options
-    )
-
-    try:
-        driver.get(url)
-        sleep(2)  # 페이지가 로딩될 때까지 잠시 대기
-
-        # 페이지 끝까지 스크롤
-        last_height = driver.execute_script("return document.body.scrollHeight")
-        while True:
-            # 스크롤을 아래로 내리기
-            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            sleep(2)  # 콘텐츠가 로딩될 때까지 대기
-
-            # 새로운 스크롤 높이를 가져와 이전 높이와 비교
-            new_height = driver.execute_script("return document.body.scrollHeight")
-            if new_height == last_height:
-                break  # 더 이상 스크롤할 수 없으면 종료
-            last_height = new_height
-
-        # 페이지에서 텍스트 콘텐츠 가져오기
-        soup = BeautifulSoup(driver.page_source, "html.parser")
-        for header in soup.find_all(["header", "footer", "nav"]):
-            header.decompose()  # 불필요한 요소 제거
-
-        content = soup.get_text(separator="\n", strip=True)
-        return content
-
-    except Exception as e:
-        print(f"ERROR on get_web_content_with_scroll: {e}")
-        return f"Error getting content from {url}. Please try another URL."
-    finally:
-        driver.quit()
 
 
 def send_chat_message(message, role, save=True):
