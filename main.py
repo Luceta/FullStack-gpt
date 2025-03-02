@@ -19,5 +19,7 @@ Here are the apps I made:
 - [ ] [SiteGPT](/SiteGPT)
 - [ ] [MeetingGPT](/MeetingGPT)
 - [ ] [InvestorGPT](/InvestorGPT)
+- [ ] [OpenAI AgentGPT](/OpenAIAgent)
+
 """
 )
