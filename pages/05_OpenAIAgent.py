@@ -213,7 +213,7 @@ def start_run(thread_id, assistant_id, content):
     return run
 
 
-def get_thread_id(client):
+def get_thread_id():
     if "thread_id" not in st.session_state:
         thread = client.beta.threads.create(
             messages=[{"role": "assistant", "content": "Hi, How can I help you?"}]
@@ -260,10 +260,10 @@ with st.sidebar:
     )
 
 if api_key:
-    # open_ai_client = client.Client(api_key=api_key)
 
     # API 키로 클라이언트 초기화
-    open_ai_client = client.Client(api_key=api_key)
+    # open_ai_client = client.Client(api_key=api_key)
+    client = client.OpenAI(api_key=api_key)
 
     keyword = st.chat_input("Ask a question to the website.")
 
@@ -273,13 +273,13 @@ if api_key:
 
     # 기존 대화 표시
     # 메시지 기록 출력
-    for idx, message in enumerate(get_messages(get_thread_id(open_ai_client))):
+    for idx, message in enumerate(get_messages(get_thread_id())):
         with st.chat_message(message.role):
             st.markdown(message.content[0].text.value)
 
     if keyword:
         assistant = get_assistant()
-        thread_id = get_thread_id(client=open_ai_client)
+        thread_id = get_thread_id()
         send_chat_message(keyword, "user")
         start_run(thread_id, assistant.id, keyword)
         # send_chat_message("user")
